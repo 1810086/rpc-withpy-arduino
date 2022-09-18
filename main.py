@@ -1,11 +1,6 @@
 import cv2
 import mediapipe as mp
-import math
-import numpy as np
-from PIL import Image, ImageFont, ImageDraw
-import emoji
 import random
-import time
 import serial
 mp_drawing = mp.solutions.drawing_utils
 mp_drawing_styles = mp.solutions.drawing_styles
@@ -21,7 +16,8 @@ tipIds = [4, 8, 12, 16, 20]
 rock = [0,0,0,0,0]
 paper = [1,1,1,1,1]
 scissors = [0,1,1,0,0]
-#arduino = serial.Serial("COM3", 9600, timeout=1)
+arduino = serial.Serial("COM4", 9600, timeout=1)
+#edit comID as shown in arduino
 p = 0
 
 FONT_SIZE = 3
@@ -67,7 +63,6 @@ def puttext(user_action,computer_action):
             return ("You win!")
         else:
             return ("You lose.")
-
 def motor():
     global options, last_pos
     cap = cv2.VideoCapture(0)
@@ -95,12 +90,12 @@ def motor():
                     if res != last_pos:
                         p = random.randint(0, len(options) - 1)
                         ans = options[p]
-                        # if p == 0:
-                        #     arduino.write(b'1')
-                        # if p == 1:
-                        #     arduino.write(b'2')
-                        # if p == 2:
-                        #     arduino.write(b'3')
+                        if p == 0:
+                            arduino.write(b'1')
+                        if p == 1:
+                            arduino.write(b'2')
+                        if p == 2:
+                            arduino.write(b'3')
                         last_pos = res
                     cv2.putText(image, ("You: "+ str(res)), (5, 100), cv2.FONT_HERSHEY_PLAIN, FONT_SIZE, (0, 0, 0), FONT_THICKNESS+2)
                     cv2.putText(image, ("You: "+ str(res)), (5, 100), cv2.FONT_HERSHEY_PLAIN, FONT_SIZE, (255, 255, 255),FONT_THICKNESS)
